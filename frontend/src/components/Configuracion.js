@@ -41,7 +41,7 @@ const Configuracion = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     // --- PARTIES HANDLERS ---
     const handlePartySubmit = async (e) => {
