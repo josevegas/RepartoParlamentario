@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { createParty, createDistrict, getParties, getDistricts, deleteParty, deleteDistrict, updateParty, updateDistrict } from '../api';
 
 const Configuracion = () => {
@@ -23,7 +23,7 @@ const Configuracion = () => {
         setTimeout(() => setToast(null), 3000);
     };
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             setLoading(true);
             const [pRes, dRes] = await Promise.all([
@@ -37,11 +37,11 @@ const Configuracion = () => {
         } finally {
             setLoading(false);
         }
-    };
+    },[]);
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     // --- PARTIES HANDLERS ---
     const handlePartySubmit = async (e) => {
