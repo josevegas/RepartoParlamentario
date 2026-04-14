@@ -139,7 +139,8 @@ function calcularSenadores(votos, distritos) {
         preliminarTotal,
         finalSeats,
         totalVotosNacionales,
-        porcentajeNacional: _.mapValues(totalVotosNacionales, v => totalNacionalVotosSum > 0 ? (v / totalNacionalVotosSum) * 100 : 0)
+        porcentajeNacional: _.mapValues(totalVotosNacionales, v => totalNacionalVotosSum > 0 ? (v / totalNacionalVotosSum) * 100 : 0),
+        distritosGanados: _.mapValues(representacionPorDistrito, set => set.size)
     };
 }
 
@@ -220,7 +221,8 @@ function calcularDiputados(votos, distritos) {
         preliminarTotal,
         finalSeats,
         totalVotosNacionales,
-        porcentajeNacional: _.mapValues(totalVotosNacionales, v => totalNacionalVotosSum > 0 ? (v / totalNacionalVotosSum) * 100 : 0)
+        porcentajeNacional: _.mapValues(totalVotosNacionales, v => totalNacionalVotosSum > 0 ? (v / totalNacionalVotosSum) * 100 : 0),
+        distritosGanados: _.mapValues(representacionPorDistrito, set => set.size)
     };
 }
 

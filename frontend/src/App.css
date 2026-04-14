@@ -6,8 +6,24 @@
 }
 
 .App-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5rem;
   margin-bottom: 2rem;
   padding: 0.5rem 0;
+  flex-wrap: wrap;
+}
+
+.header-logo {
+  width: 80px;
+  /* Ajusta según tu logo real */
+  height: auto;
+  display: block;
+}
+
+.header-title {
+  text-align: left;
 }
 
 .App-header h1 {
@@ -312,5 +328,11 @@ tr:hover td {
     right: 1rem;
     left: 1rem;
     text-align: center;
+  }
+
+  footer p:last-child {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-top: 0.5rem;
   }
 }
