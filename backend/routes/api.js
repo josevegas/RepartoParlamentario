@@ -4,6 +4,7 @@ const Vote = require('../models/Voto');
 const Partido = require('../models/Partido');
 const Distrito = require('../models/Distrito');
 const { calcularSenadores, calcularDiputados } = require('../utils/allocation');
+const onpeSyncService = require('../services/onpeSyncService');
 
 // Get all parties
 router.get('/parties', async (req, res) => {
@@ -178,6 +179,35 @@ router.get('/allocate/diputados', async (req, res) => {
 
         const result = calcularDiputados(votes, districtsWithSeats);
         res.json(result);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ONPE Sync Routes
+router.post('/onpe/sync/senadores', async (req, res) => {
+    try {
+        const result = await onpeSyncService.syncSenadores();
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/onpe/sync/diputados', async (req, res) => {
+    try {
+        const result = await onpeSyncService.syncDiputados();
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/onpe/sync/all', async (req, res) => {
+    try {
+        const senRes = await onpeSyncService.syncSenadores();
+        const dipRes = await onpeSyncService.syncDiputados();
+        res.json({ senadores: senRes, diputados: dipRes });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

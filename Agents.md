@@ -6,9 +6,9 @@ Este documento describe las reglas y la lógica para el reparto de escaños en l
 ### Estructura
 - **Distritos Totales**: 28
 - **Reparto de Escaños por Distrito**:
-  - Distrito 1: 30 escaños.
-  - Distrito 2: 4 escaños.
-  - Distritos 3 al 28: 1 escaño cada uno.
+  - Distrito 28: 30 escaños.
+  - Distrito 15: 4 escaños.
+  - Distritos 1 al 14 y 16 al 27: 1 escaño cada uno.
 
 ### Reglas de Asignación
 1. **Distritos de 1 Escaño**: El partido que obtenga la mayor votación en el distrito gana el escaño (Ganador único).

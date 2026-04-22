@@ -51,3 +51,8 @@ export const updateDistrict = (id, districtData) => fetch(`${API_BASE}/districts
 export const deleteDistrict = (id) => fetch(`${API_BASE}/districts/${id}`, {
     method: 'DELETE'
 }).then(handleResponse);
+
+// ONPE Synchronization
+export const syncSenadoresOnpe = () => fetch(`${API_BASE}/onpe/sync/senadores`, { method: 'POST' }).then(handleResponse);
+export const syncDiputadosOnpe = () => fetch(`${API_BASE}/onpe/sync/diputados`, { method: 'POST' }).then(handleResponse);
+export const syncAllOnpe = () => fetch(`${API_BASE}/onpe/sync/all`, { method: 'POST' }).then(handleResponse);

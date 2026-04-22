@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { createParty, createDistrict, getParties, getDistricts, deleteParty, deleteDistrict, updateParty, updateDistrict } from '../api';
+import { createParty, createDistrict, getParties, getDistricts, deleteParty, deleteDistrict, updateParty, updateDistrict, syncAllOnpe } from '../api';
 
 const Configuracion = () => {
     const [parties, setParties] = useState([]);
@@ -42,6 +42,21 @@ const Configuracion = () => {
     useEffect(() => {
         fetchData();
     }, [fetchData]);
+
+    const handleSyncOnpe = async () => {
+        if (!window.confirm('¿Desea sincronizar los datos con la ONPE? Esto reemplazará los votos actuales.')) return;
+        try {
+            setLoading(true);
+            showToast('Sincronizando con ONPE... por favor espere.', 'info');
+            const res = await syncAllOnpe();
+            showToast(`Sincronización completada: ${res.senadores.count} votos de senadores y ${res.diputados.count} de diputados.`);
+            fetchData();
+        } catch (err) {
+            showToast('Error en sincronización: ' + err.message, 'error');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // --- PARTIES HANDLERS ---
     const handlePartySubmit = async (e) => {
@@ -158,8 +173,8 @@ const Configuracion = () => {
                                 <input type="text" value={partyData.nombre} onChange={e => setPartyData({ ...partyData, nombre: e.target.value })} required placeholder="Ej. Partido Central" />
                             </div>
                             <div className="form-group">
-                                <label>Número (0-36):</label>
-                                <input type="number" min="0" max="36" value={partyData.numero} onChange={e => setPartyData({ ...partyData, numero: e.target.value })} required />
+                                <label>Número (1-100):</label>
+                                <input type="number" min="1" max="100" value={partyData.numero} onChange={e => setPartyData({ ...partyData, numero: e.target.value })} required />
                             </div>
                             <div className="form-group">
                                 <label>Color (#HEX):</label>
@@ -236,6 +251,20 @@ const Configuracion = () => {
                                     </div>
                                 </div>
                             ))}
+                        </div>
+                    </section>
+                </div>
+
+                {/* --- SECCIÓN SINCRONIZACIÓN --- */}
+                <div className="config-column" style={{ gridColumn: '1 / -1' }}>
+                    <section className="glass-card">
+                        <h3>🔄 Sincronización de Datos ONPE</h3>
+                        <p className="text-muted">Obtén los resultados oficiales directamente de la ONPE para todas las cámaras y distritos.</p>
+                        <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                            <button onClick={handleSyncOnpe} className="btn-primary" disabled={loading}>
+                                {loading ? '⏳ Sincronizando...' : '🚀 Sincronizar Todo con ONPE'}
+                            </button>
+                            {loading && <span className="text-muted">Esto puede tardar unos segundos...</span>}
                         </div>
                     </section>
                 </div>
