@@ -57,7 +57,7 @@ const Diputados = () => {
         }));
     };
 
-    const handleSaveAndCalculate = async () => {
+    /* const handleSaveAndCalculate = async () => {
         const flatVotes = [];
         Object.entries(votes).forEach(([distritoId, pVotes]) => {
             Object.entries(pVotes).forEach(([partidoId, cantidad]) => {
@@ -74,7 +74,7 @@ const Diputados = () => {
         } catch (err) {
             alert('Error al calcular: ' + err.message);
         }
-    };
+    }; */
 
     if (loading) return <div>Cargando datos electorales...</div>;
 
