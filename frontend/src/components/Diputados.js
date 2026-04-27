@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getParties, getDistricts, saveVotes, calculateDiputados, getVotes } from '../api';
+import ResultsTable from './ResultsTable';
 
 const Diputados = () => {
     const [parties, setParties] = useState([]);
@@ -85,7 +86,7 @@ const Diputados = () => {
         <div className="diputados-view">
             <div className="select-district-box">
                 <label>DISTRITO:</label>
-                <select
+                <select className="district-selector"
                     value={selectedDistrict?._id}
                     onChange={(e) => setSelectedDistrict(districts.find(d => d._id === e.target.value))}
                 >
@@ -93,9 +94,9 @@ const Diputados = () => {
                         <option key={d._id} value={d._id}>{d.nombre} ({d.diputados} escaños)</option>
                     ))}
                 </select>
-                <button onClick={handleSaveAndCalculate} style={{ marginLeft: 'auto' }}>
+                {/* <button onClick={handleSaveAndCalculate} style={{ marginLeft: 'auto' }}>
                     Calcular y Guardar
-                </button>
+                </button> */}
             </div>
 
             <div className="dashboard-grid">
@@ -146,49 +147,15 @@ const Diputados = () => {
                 </section>
 
                 <section className="glass-card" style={{ gridColumn: '1 / -1' }}>
-                    <h3>Resultados Finales (Diputados)</h3>
-                    {!results ? (
-                        <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '4rem' }}>
-                            <p>Ingrese los votos y presione calcular para obtener los resultados.</p>
-                        </div>
-                    ) : (
-                        <div className="results-content">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Partido</th>
-                                        <th>Votos (%)</th>
-                                        <th>Distritos</th>
-                                        <th>Preliminar</th>
-                                        <th>Final</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {parties.slice().sort((a,b) => (results.finalSeats?.[b._id] || 0) - (results.finalSeats?.[a._id] || 0)).map(p => {
-                                        const pId = p._id;
-                                        const totalVotos = results.totalVotosNacionales?.[pId] || 0;
-                                        const pct = results.porcentajeNacional?.[pId] || 0;
-                                        const dists = results.distritosGanados?.[pId] || 0;
-                                        const pre = results.preliminarTotal?.[pId] || 0;
-                                        const final = results.finalSeats?.[pId] || 0;
-                                        
-                                        if (totalVotos === 0 && pre === 0) return null;
 
-                                        const rowStyle = final > 0 ? { backgroundColor: 'rgba(124, 58, 237, 0.15)' } : {};
-
-                                        return (
-                                            <tr key={pId} style={rowStyle}>
-                                                <td><span className="party-badge" style={{ background: p.color }}></span> {p.nombre}</td>
-                                                <td>{pct.toFixed(2)}%</td>
-                                                <td>{dists}</td>
-                                                <td>{pre}</td>
-                                                <td style={{ fontWeight: 'bold', color: final > 0 ? 'var(--accent)' : 'inherit' }}>{final}</td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
+                    {results && (
+                        <section className="results-section glass-card">
+                            <ResultsTable
+                                parties={parties}
+                                results={results}
+                                title="Proyección de Escaños"
+                            />
+                        </section>
                     )}
                 </section>
             </div>

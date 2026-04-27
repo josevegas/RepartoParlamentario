@@ -1,29 +1,53 @@
 import React from 'react';
 
-export default function ResultsTable({ results, title }) {
-    if (!results || !results.partidos) return <div>No hay resultados</div>;
-
-    // Ordenar por escaños descendente
-    const sorted = [...results.partidos].sort((a, b) => b.escaños - a.escaños);
-
+const ResultsTable = ({ parties, results, title }) => {
+    if (!results) return <p className="text-dim">No hay resultados disponibles.</p>;
+    console.log(results);
+    // Ordenamos los partidos que obtuvieron escaños
+    const sortedParties = [...parties].sort((a, b) => {
+        const seatsA = results.finalSeats?.[a._id] || 0;
+        const seatsB = results.finalSeats?.[b._id] || 0;
+        return seatsB - seatsA;
+    });
+    //console.log(sortedParties)
     return (
-        <div>
-            <h3>{title}</h3>
-            <table border="1" cellPadding="5">
+        <div className="results-container">
+            <h3 className="section-title">{title}</h3>
+            <table>
                 <thead>
-                    <tr><th>Partido</th><th>Votos Totales</th><th>Escaños</th></tr>
+                    <tr>
+                        <th>Partido</th>
+                        <th>Votos</th>
+                        <th>Porcentaje</th>
+                        <th>Distritos</th>
+                        <th>Preliminar</th>
+                        <th>Escaños Finales</th>
+                    </tr>
                 </thead>
                 <tbody>
-                    {sorted.map((g, idx) => (
-                        <tr key={idx}>
-                            <td>Partido {g.partido + 1}</td>
-                            <td>{g.votosTotales}</td>
-                            <td>{g.escaños}</td>
-                        </tr>
-                    ))}
+                    {sortedParties.map(p => {
+                        const final = results.finalSeats?.[p._id] || 0;
+                        //console.log(final);
+                        if (final === 0 && (results.preliminarTotal?.[p._id] || 0) === 0) return null;
+
+                        return (
+                            <tr key={p._id} className={final > 0 ? 'active-row' : ''}>
+                                <td>
+                                    <span className="party-badge" style={{ background: p.color }}></span>
+                                    {p.nombre}
+                                </td>
+                                <td>{results.totalVotosNacionales?.[p._id]?.toLocaleString() || 0}</td>
+                                <td>{results.porcentajeNacional?.[p._id]?.toFixed(2)}%</td>
+                                <td>{results.distritosGanados?.[p._id] || 0}</td>
+                                <td>{results.preliminarTotal?.[p._id] || 0}</td>
+                                <td className="highlight-seats">{final}</td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
-            <p><strong>Total escaños:</strong> {sorted.reduce((sum, g) => sum + g.escaños, 0)}</p>
         </div>
     );
-}
+};
+
+export default ResultsTable;
